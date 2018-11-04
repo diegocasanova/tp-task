@@ -17,19 +17,16 @@ public abstract class Account {
     //random account number for test implementation
     protected String number = UUID.randomUUID().toString();
 
-    public Account(final String owner) {
-        this.balance = BigDecimal.ZERO;
-        this.owner = owner;
-    }
-
     public Account(final String owner, final BigDecimal balance) {
         this.balance = balance;
         this.owner = owner;
     }
 
-    public abstract BigDecimal deposit(final BigDecimal amount);
-
-    public abstract BigDecimal withdraw(BigDecimal amount);
+    public Account(final String number, final String owner, final BigDecimal balance) {
+        this.balance = balance;
+        this.owner = owner;
+        this.number = number;
+    }
 
     protected void validateAmount(final BigDecimal amount, final String operation) {
         if (BigDecimal.ZERO.compareTo(amount) >= 0) {

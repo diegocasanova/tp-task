@@ -1,9 +1,7 @@
 package com.casanova.tp.task.domain;
 
 import com.casanova.tp.task.domain.exception.OverdraftLimitExceededException;
-import com.casanova.tp.task.domain.exception.TransferOnSameAccountException;
 import com.casanova.tp.task.domain.transaction.DepositTransaction;
-import com.casanova.tp.task.domain.transaction.TransferTransaction;
 import com.casanova.tp.task.domain.transaction.WithdrawTransaction;
 import lombok.Builder;
 import lombok.Value;
@@ -14,11 +12,9 @@ import java.math.BigDecimal;
 @Value
 public class CheckingAccount extends Account {
 
-
-    public static final String TRANSFER = "TRANSFER";
     private BigDecimal overdraftLimit;
 
-    public CheckingAccount(String owner, BigDecimal balance,  BigDecimal overdraftLimit) {
+    public CheckingAccount(final String owner, final BigDecimal balance, final BigDecimal overdraftLimit) {
        this(null, owner, balance, overdraftLimit);
     }
 
@@ -38,7 +34,7 @@ public class CheckingAccount extends Account {
     }
 
 
-    private BigDecimal withdraw(BigDecimal amount) {
+    private BigDecimal withdraw(final BigDecimal amount) {
         validateAmount(amount, Account.WITHDRAW);
         if (amount.compareTo(balance.add(overdraftLimit)) > 0) {
             throw new OverdraftLimitExceededException(amount, balance, overdraftLimit);
@@ -46,24 +42,13 @@ public class CheckingAccount extends Account {
         return balance.subtract(amount);
     }
 
+    @Override
     public CheckingAccount process(final DepositTransaction transaction) {
         return this.toBuilder().balance(deposit(transaction.getAmount())).build();
     }
 
+    @Override
     public CheckingAccount process(final WithdrawTransaction transaction) {
         return this.toBuilder().balance(withdraw(transaction.getAmount())).build();
-    }
-
-    public CheckingAccount process(final TransferTransaction transaction) {
-        validateAmount(transaction.getAmount(), TRANSFER);
-        if (StringUtils.equals(transaction.getDestinationAccountNumber(), transaction.getAccountNumber())) {
-            throw new TransferOnSameAccountException(transaction.getDestinationAccountNumber());
-        }
-        if (this.getNumber().equals(transaction.getAccountNumber())) { //transfer source
-            return this.toBuilder().balance(withdraw(transaction.getAmount())).build();
-        } else if (this.getNumber().equals(transaction.getDestinationAccountNumber())) { //transfer destination
-            return this.toBuilder().balance(deposit(transaction.getAmount())).build();
-        }
-        return this; //no transfers
     }
 }

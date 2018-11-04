@@ -16,12 +16,12 @@ public class SavingAccount extends Account {
 
     private Double interestRate;
 
-    public SavingAccount(String owner, BigDecimal balance, Double interestRate) {
+    public SavingAccount(final String owner,final BigDecimal balance,final Double interestRate) {
         this(null, owner, balance, interestRate);
     }
 
     @Builder(toBuilder = true)
-    public SavingAccount(String number, String owner, BigDecimal balance, Double interestRate) {
+    public SavingAccount(final String number,final String owner,final BigDecimal balance,final Double interestRate) {
         super(owner, balance);
         if (StringUtils.isNotEmpty(number)) {
             this.number = number;
@@ -56,7 +56,7 @@ public class SavingAccount extends Account {
 
     public SavingAccount process(final PayInterestTransaction transaction) {
         //some validation to assert if the interest should be paid
-        //we always pay interest for test purposes if the interesRate is > 0
+        //we always pay interest for test purposes if the interestRate is > 0
         if (interestRate == 0) {
             return this;
         }

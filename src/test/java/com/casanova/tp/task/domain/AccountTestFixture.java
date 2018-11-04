@@ -31,6 +31,10 @@ public class AccountTestFixture {
         return new SavingAccount(TEST_ACCOUNT_OWNER, TEST_INITIAL_BALANCE, TEST_INTEREST_RATE);
     }
 
+    public static SavingAccount savingAccount(final String number, final double balance) {
+        return new SavingAccount(number,TEST_ACCOUNT_OWNER, BigDecimal.valueOf(balance),TEST_INTEREST_RATE);
+    }
+
     public static CheckingAccount checkingAccount() {
         return new CheckingAccount(TEST_ACCOUNT_OWNER, TEST_INITIAL_BALANCE,
             BigDecimal.valueOf(TEST_OVERDRAFT_LIMIT));

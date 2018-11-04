@@ -1,6 +1,8 @@
 package com.casanova.tp.task.domain;
 
 import com.casanova.tp.task.domain.exception.InvalidAmountException;
+import com.casanova.tp.task.domain.transaction.DepositTransaction;
+import com.casanova.tp.task.domain.transaction.WithdrawTransaction;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -27,6 +29,9 @@ public abstract class Account {
         this.owner = owner;
         this.number = number;
     }
+
+    public abstract Account process(final DepositTransaction transaction);
+    public abstract Account process(final WithdrawTransaction transaction);
 
     protected void validateAmount(final BigDecimal amount, final String operation) {
         if (BigDecimal.ZERO.compareTo(amount) >= 0) {
